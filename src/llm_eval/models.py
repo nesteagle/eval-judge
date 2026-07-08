@@ -6,6 +6,30 @@ _MESSAGE_TAG = "message_to_evaluate"
 
 
 @dataclass(frozen=True)
+class ScoreAnchor:
+    score: int
+    description: str
+
+
+@dataclass(frozen=True)
+class EvalDimension:
+    key: str
+    title: str
+    definition: str
+    penalize: list[str] = None
+    reward: list[str] = None
+    anchors: list[ScoreAnchor] = None
+    caveat: str | None = None
+
+    def __post_init__(self):
+        scores = sorted(a.score for a in self.anchors)
+        if scores != [1, 2, 3, 4, 5]:
+            raise ValueError(
+                f"{self.key} must have exactly one anchor per score 1-5, got {scores}"
+            )
+
+
+@dataclass(frozen=True)
 class ContextMessage:
     message_id: str
     content: str
