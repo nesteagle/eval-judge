@@ -38,7 +38,7 @@ def build_requests_batch(
                 run_suffix = f"-{run}" if passes > 1 else ""
 
                 body = _build_request_body(
-                    user_content=message.content, config=model_config
+                    user_content=message.formatted(), config=model_config
                 )
 
                 payload = {
