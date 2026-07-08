@@ -4,6 +4,7 @@ from typing import NewType
 _CONTEXT_TAG = "preceding_context"
 _MESSAGE_TAG = "message_to_evaluate"
 
+
 @dataclass(frozen=True)
 class ContextMessage:
     message_id: str

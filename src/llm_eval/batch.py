@@ -1,6 +1,6 @@
 import json
 
-from judge_eval.models import ContextMessage, ModelConfig
+from llm_eval.models import ContextMessage, ModelConfig
 
 
 def _build_request_body(user_content: str, config: ModelConfig) -> dict:
