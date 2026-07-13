@@ -55,4 +55,4 @@ class JudgeConfig:
     model: str
     effort: str
     max_output_tokens: int
-    dimensions = list[EvalDimension]
+    dimensions: list[EvalDimension]
