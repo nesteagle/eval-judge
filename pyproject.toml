@@ -1,5 +1,5 @@
 [project]
-name = "llm-eval"
+name = "eval-judge"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

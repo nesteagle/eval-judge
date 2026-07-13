@@ -1,15 +1,16 @@
 import json
 
-from llm_eval.models import ContextMessage, ModelConfig
+from eval_judge.models import ContextMessage, JudgeConfig
+from eval_judge.rubric import _build_output_schema, _build_system_prompt
 
 
-def _build_request_body(user_content: str, config: ModelConfig) -> dict:
+def _build_request_body(user_content: str, config: JudgeConfig) -> dict:
     """Builds OpenAI API request body contents."""
     return {
         "model": config.model,
         "store": False,
         "reasoning": {"effort": config.effort},
-        "instructions": config.system_instructions,
+        "instructions": _build_system_prompt(config.dimensions),
         "input": [{"role": "user", "content": user_content}],
         "max_output_tokens": config.max_output_tokens,
         "text": {
@@ -17,7 +18,7 @@ def _build_request_body(user_content: str, config: ModelConfig) -> dict:
                 "type": "json_schema",
                 "strict": True,
                 "name": "alignment_eval",
-                "schema": config.schema,
+                "schema": _build_output_schema(config.dimensions),
             }
         },
     }
@@ -26,7 +27,7 @@ def _build_request_body(user_content: str, config: ModelConfig) -> dict:
 def build_requests_batch(
     messages: list[ContextMessage],
     output_path: str,
-    model_config: ModelConfig,
+    config: JudgeConfig,
     passes: int = 1,
 ) -> str:
     """Converts assembled prompt records into a batch-ready JSONL file."""
@@ -38,7 +39,7 @@ def build_requests_batch(
                 run_suffix = f"-{run}" if passes > 1 else ""
 
                 body = _build_request_body(
-                    user_content=message.formatted(), config=model_config
+                    user_content=message.formatted(), config=config
                 )
 
                 payload = {

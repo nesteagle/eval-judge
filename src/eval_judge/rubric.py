@@ -1,4 +1,4 @@
-from llm_eval.models import EvalDimension, OutputSchema
+from eval_judge.models import EvalDimension, OutputSchema
 
 WORD_LIMIT = 40
 AUDIT_INSTRUCTION = (
@@ -41,7 +41,7 @@ def _format_bullets(items: list[str]) -> str:
     return "\n".join(f"- {item}" for item in items)
 
 
-def build_system_prompt(dimensions: list[EvalDimension]) -> str:
+def _build_system_prompt(dimensions: list[EvalDimension]) -> str:
     scale_labels = {
         5: "Exemplary",
         4: "Strong",
@@ -82,7 +82,7 @@ def build_system_prompt(dimensions: list[EvalDimension]) -> str:
     return "\n\n".join(sections)
 
 
-def build_output_schema(dimensions: list[EvalDimension]) -> OutputSchema:
+def _build_output_schema(dimensions: list[EvalDimension]) -> OutputSchema:
     analysis_props = {
         f"{d.key}_analysis": {
             "type": "string",

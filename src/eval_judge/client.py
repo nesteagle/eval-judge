@@ -1,11 +1,9 @@
-import json
 import time
 from functools import lru_cache
+from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
-
-from llm_eval.output import save_json
 
 
 @lru_cache(maxsize=1)
@@ -48,15 +46,15 @@ def _poll_batch(batch_id: str, interval: int = 60) -> str:
         time.sleep(interval)
 
 
-def retrieve_batch(batch_id: str, output_path: str) -> list[dict]:
+def retrieve_batch(batch_id: str, output_path: str) -> str:
     """
-    Retrieves completed batch output, polling if needed, and saves raw results to output_path as JSON.
+    Retrieves completed batch output, polling if needed, and saves JSONL raw results to output_path.
     """
     client = _get_client()
     output_file_id = _poll_batch(batch_id)
     raw = client.files.content(output_file_id).text
 
-    results = [json.loads(line) for line in raw.strip().split("\n") if line.strip()]
+    Path(output_path).write_text(raw, encoding="utf-8")
+    print(f"Saved batch output -> {output_path}")
 
-    save_json(results, output_path)
-    return results
+    return raw

@@ -2,12 +2,17 @@ import json
 from pathlib import Path
 
 
-def parse_results(input_path: str) -> list[dict]:
-    """Parses JSON results for OpenAI raw batch output."""
+def _parse_results(records: list[dict]) -> list[dict]:
+    """Parses a list of raw batch record dicts."""
+    return [_parse_record(r) for r in records]
+
+
+def load_and_parse_results(input_path: str | Path) -> list[dict]:
+    """Loads JSONL OpenAI raw batch output and parses."""
     raw = Path(input_path).read_text(encoding="utf-8")
-    records = json.loads(raw)
-    results = [_parse_record(r) for r in records]
-    return results
+    records = [json.loads(line) for line in raw.strip().split("\n") if line.strip()]
+
+    return _parse_results(records)
 
 
 def _parse_record(record: dict) -> dict:
@@ -27,9 +32,3 @@ def _parse_record(record: dict) -> dict:
         ) from e
     result["custom_id"] = custom_id
     return result
-
-
-def save_json(data: list, path: str) -> None:
-    Path(path).write_text(json.dumps(data, indent=2), encoding="utf-8")
-    print(f"Saved {len(data)} objects -> {path}")
-

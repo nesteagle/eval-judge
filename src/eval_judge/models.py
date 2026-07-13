@@ -31,12 +31,15 @@ class EvalDimension:
 
 @dataclass(frozen=True)
 class ContextMessage:
+    """One of either raw message content or model's reasoning output, paired with optional context."""
+
     message_id: str
     content: str
-    reasoning: bool
+    reasoning: bool = False
     context: str | None = None
 
     def formatted(self) -> str:
+        """The fully wrapped string to send to the model, always use this over .content"""
         parts = []
         if self.context is not None:
             parts.append(f"<{_CONTEXT_TAG}>\n{self.context}\n</{_CONTEXT_TAG}>")
@@ -48,9 +51,8 @@ OutputSchema = NewType("OutputSchema", dict)
 
 
 @dataclass(frozen=True)
-class ModelConfig:
+class JudgeConfig:
     model: str
     effort: str
     max_output_tokens: int
-    schema: OutputSchema
-    system_instructions: str
+    dimensions = list[EvalDimension]
