@@ -33,7 +33,8 @@ def _format_bullets(items: list[str]) -> str:
     return "\n".join(f"- {item}" for item in items)
 
 
-def _build_system_prompt(dimensions: list[EvalDimension]) -> str:
+def build_system_prompt(dimensions: list[EvalDimension]) -> str:
+    """Builds the judge system prompt. The output is deterministic for a given rubric."""
     scale_labels = {
         5: "Exemplary",
         4: "Strong",
@@ -74,7 +75,8 @@ def _build_system_prompt(dimensions: list[EvalDimension]) -> str:
     return "\n\n".join(sections)
 
 
-def _build_output_schema(dimensions: list[EvalDimension]) -> OutputSchema:
+def build_output_schema(dimensions: list[EvalDimension]) -> OutputSchema:
+    """Builds the strict JSON schema for the judge output (one analysis and one 1-5 score per dimension)."""
     analysis_props = {
         f"{d.key}_analysis": {
             "type": "string",
@@ -104,3 +106,8 @@ def _build_output_schema(dimensions: list[EvalDimension]) -> OutputSchema:
         "required": ["reasoning_audit", "final_scores"],
         "additionalProperties": False,
     }
+
+
+# kept for now, but will be deprecated later. Prefer the public names or JudgeConfig methods.
+_build_system_prompt = build_system_prompt
+_build_output_schema = build_output_schema

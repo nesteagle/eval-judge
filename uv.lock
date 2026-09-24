@@ -52,18 +52,16 @@ wheels = [
 
 [[package]]
 name = "eval-judge"
-version = "0.1.2"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "openai" },
-    { name = "python-dotenv" },
 ]
 
+
 [package.metadata]
-requires-dist = [
-    { name = "openai", specifier = ">=2.44.0" },
-    { name = "python-dotenv", specifier = ">=1.2.2" },
-]
+requires-dist = [{ name = "openai", specifier = ">=2.44.0" }]
+
 
 [[package]]
 name = "h11"

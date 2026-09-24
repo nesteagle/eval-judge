@@ -1,7 +1,7 @@
 [project]
 name = "eval-judge"
-version = "0.1.2"
-description = "Add your description here"
+version = "0.2.0"
+description = "LLM-as-a-judge scoring for AI systems, via provider batch APIs"
 readme = "README.md"
 authors = [
     { name = "nesteagle", email = "104323706+nesteagle@users.noreply.github.com" }
